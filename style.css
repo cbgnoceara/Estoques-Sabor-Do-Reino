@@ -1,229 +1,362 @@
-/* --- VARIAVEIS DE COR (PALETA DA LANCHONETE) --- */
+/* --- GERAL E FONTES --- */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700;800&display=swap');
+
 :root {
-    --primary-color: #ff6347; /* Tomate */
-    --secondary-color: #fff8e1; /* Creme */
-    --dark-color: #333;
-    --light-color: #fff;
-    --success-color: #2ecc71; /* Verde */
-    --danger-color: #e74c3c; /* Vermelho */
-    --edit-color: #3498db; /* Azul */
-    --low-stock-color: #fff0f0; /* Fundo para estoque baixo */
+    --primary-color: #c82a34; /* Vermelho da sua identidade visual */
+    --secondary-color: #4A4A4A; /* Cinza escuro para textos */
+    --background-color: #F8F8F8; /* Fundo cinza claro */
+    --surface-color: #FFFFFF; /* Branco para os cards */
+    --border-color: #EAEAEA; /* Cor para bordas sutis */
+    --font-family: 'Nunito Sans', sans-serif;
 }
 
-/* --- ESTILOS GERAIS E RESET --- */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--secondary-color);
-    color: var(--dark-color);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 20px;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--secondary-color);
+    -webkit-font-smoothing: antialiased; /* Melhora a renderização da fonte */
 }
 
-.container {
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
 
 /* --- CABEÇALHO --- */
 header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100%;
+    background-color: var(--surface-color);
     text-align: center;
+    padding: 20px 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-bottom: 4px solid var(--primary-color);
+}
+
+header .logo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
 }
 
 header h2 {
     color: var(--primary-color);
-    margin-top: 10px;
-}
-
-.logo {
-    width: 80px;
-    height: 80px;
-}
-
-/* --- INPUTS E BOTÕES GERAIS --- */
-input[type="text"], input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-button {
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--primary-color);
-    color: var(--light-color);
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-button:hover {
-    background-color: #e55337;
+    font-weight: 800;
+    font-size: 1.8rem;
 }
 
 
-/* --- LISTA DE PRODUTOS --- */
+/* --- LAYOUT PRINCIPAL --- */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 25px 15px;
+}
+
 #product-list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    gap: 16px;
 }
 
-.product-item {
-    background-color: var(--light-color);
-    padding: 15px;
+
+/* --- CARD DE PRODUTO --- */
+.product-card {
+    background-color: var(--surface-color);
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem a linha em telas pequenas */
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
+    transition: transform 0.2s ease-in-out;
 }
 
-.product-item.low-stock {
-    background-color: var(--low-stock-color);
-    border-left: 5px solid var(--danger-color);
+.product-card:hover {
+    transform: translateY(-4px);
 }
 
-.product-name {
-    font-weight: 500;
-    word-break: break-word; /* Evita que nomes longos quebrem o layout */
+.product-card.low-stock {
+    border-left: 5px solid var(--primary-color);
+    padding-left: 15px;
 }
 
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    flex-grow: 1; /* Faz o título ocupar o espaço disponível */
+}
 
-/* --- CONTROLES DE ESTOQUE (+/-) --- */
+/* --- CONTROLES DE ESTOQUE (+/-) E OPÇÕES (⋮) --- */
+.product-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%; /* Ocupa a linha toda em telas pequenas */
+    justify-content: space-between;
+}
+
 .stock-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    padding: 5px;
+    border-radius: 8px;
 }
 
 .stock-quantity {
-    font-size: 20px;
-    font-weight: bold;
-    min-width: 30px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    min-width: 50px;
     text-align: center;
 }
 
 .control-button {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    font-size: 24px;
+    border-radius: 6px;
+    font-size: 1.8rem;
+    color: white;
+    border: none;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 1;
-    padding: 0;
-    padding-bottom: 4px; /* ajuste fino para centralizar o texto */
+    transition: opacity 0.2s;
+}
+.control-button:hover {
+    opacity: 0.85;
 }
 
 .btn-plus {
-    background-color: var(--success-color);
+    background-color: var(--secondary-color);
 }
 
 .btn-minus {
-    background-color: var(--danger-color);
+    background-color: var(--primary-color);
 }
 
-/* --- BOTÕES DE AÇÃO (EDITAR/EXCLUIR) --- */
-.product-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.card-options {
+    position: relative;
 }
 
-.action-button {
+.options-button {
     background: none;
     border: none;
+    font-size: 1.5rem;
     cursor: pointer;
-    font-size: 20px;
-    padding: 5px;
-    width: auto; /* Para não ocupar 100% da largura como botões normais */
-    border-radius: 50%; /* Deixa o fundo redondo ao clicar */
-    transition: background-color 0.2s;
+    color: #AAA;
+    padding: 8px;
+    border-radius: 50%;
+}
+.options-button:hover {
+    background-color: var(--background-color);
+    color: var(--secondary-color);
 }
 
-.action-button:hover {
-    background-color: #f0f0f0;
+.options-menu {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 10;
+    overflow: hidden;
+    width: 150px; /* Largura fixa para o menu */
 }
 
-.btn-edit {
-    color: var(--edit-color);
+.options-menu.show {
+    display: block;
 }
 
-.btn-delete {
-    color: var(--danger-color);
+.options-menu button {
+    display: flex; /* Para alinhar ícone e texto */
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 15px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: var(--secondary-color);
+    font-size: 1rem;
+    font-family: var(--font-family);
 }
 
+.options-menu button:hover {
+    background-color: var(--background-color);
+}
+.options-menu button.btn-delete:hover {
+    background-color: #ffebee;
+    color: var(--primary-color);
+}
 
 /* --- BOTÃO FLUTUANTE (FAB) E MODAL --- */
 .fab {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
+    bottom: 25px;
+    right: 25px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    font-size: 30px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    z-index: 10;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 2rem;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* --- ESTILOS DO MODAL (AQUI ESTÃO AS PRINCIPAIS MUDANÇAS) --- */
+
+.hidden { /* Classe para esconder elementos via JS */
+    display: none !important;
 }
 
 #modal-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 20;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6); display: flex;
+    justify-content: center; align-items: center; z-index: 110;
+    padding: 15px;
 }
-
 #modal {
-    background-color: var(--light-color);
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 350px;
+    background-color: var(--surface-color); padding: 25px;
+    border-radius: 8px; width: 100%; max-width: 400px;
+    display: flex; flex-direction: column; gap: 20px; /* Aumenta o espaçamento entre os blocos */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+#modal-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-align: center; /* Centraliza o título */
+    margin-bottom: 10px;
 }
 
-.modal-actions {
+/* Organiza cada passo/pergunta do formulário */
+.form-step {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaço entre o label e o campo */
+}
+.form-step > label {
+    font-weight: 700;
+    color: #555;
+}
+
+/* Grupo de botões de seleção (Unidade/Peso, Granel/Porções) */
+.radio-group {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
+}
+.radio-group button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--secondary-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: background-color 0.2s, color 0.2s;
+}
+.radio-group button.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }
 
+/* Campos de texto */
+#modal input {
+    font-family: var(--font-family);
+    font-size: 1rem;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 100%; /* Ocupa toda a largura */
+}
+#modal .input-group { /* Agrupa label e input para espaçamento */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Seção de Porções */
+#variations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.variation-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.variation-item input {
+    flex-grow: 1; /* Faz os inputs de texto ocuparem o espaço */
+}
+.variation-item input.variation-weight {
+    flex-grow: 0;
+    width: 120px; /* Largura fixa para o peso */
+}
+.btn-remove-variation {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    color: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.btn-add-variation {
+    padding: 10px;
+    border: 1px dashed var(--border-color);
+    background-color: transparent;
+    color: var(--secondary-color);
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 700;
+}
+.btn-add-variation:hover {
+    background-color: var(--background-color);
+}
+
+
+/* Botões de Ação do Modal (Salvar/Cancelar) */
+.modal-actions {
+    display: flex; gap: 10px; margin-top: 10px;
+}
+.modal-actions button {
+    flex: 1; /* Faz os botões ocuparem o mesmo espaço */
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+.modal-actions button:hover {
+    opacity: 0.9;
+}
+#save-button {
+    background-color: var(--primary-color);
+    color: white;
+}
 #cancel-button {
-    background-color: #ccc;
-    color: var(--dark-color);
-}
-
-#cancel-button:hover {
-    background-color: #bbb;
+    background-color: #e0e0e0; /* Cor mais neutra */
+    color: var(--secondary-color);
 }

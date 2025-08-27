@@ -25,12 +25,45 @@
             <button id="add-product-button" class="fab">+</button>
         </footer>
     </div>
-
+    
     <div id="modal-container" style="display: none;">
         <div id="modal">
             <h3 id="modal-title">Novo Produto</h3>
-            <input type="text" id="product-name" placeholder="Nome do Produto">
-            <input type="number" id="product-quantity" placeholder="Quantidade Inicial">
+    
+            <div class="form-step">
+                <label>Como o produto é vendido?</label>
+                <div class="radio-group" id="unit-selection">
+                    <button data-value="UN">Por Unidade</button>
+                    <button data-value="KG">Por Peso (KG)</button>
+                </div>
+            </div>
+            
+            <div class="form-step hidden" id="main-fields">
+                <div class="input-group">
+                    <label for="product-name">Nome do Produto</label>
+                    <input type="text" id="product-name" placeholder="Ex: Coca-Cola Lata">
+                </div>
+                <div class="input-group">
+                    <label for="product-quantity" id="quantity-label">Quantidade Inicial</label>
+                    <input type="number" id="product-quantity" placeholder="Ex: 50">
+                </div>
+            </div>
+    
+            <div class="form-step hidden" id="kg-type-selection">
+                <label>Qual o tipo de venda por peso?</label>
+                <div class="radio-group" id="kg-type">
+                    <button data-value="GRANEL">A Granel (Ex: Queijo)</button>
+                    <button data-value="PORTIONS">Porções Fixas (Ex: Açaí)</button>
+                </div>
+            </div>
+    
+            <div class="form-step hidden" id="variations-container">
+                <label>Porções de Venda</label>
+                <div id="variations-list">
+                    </div>
+                <button id="add-variation-button" class="btn-add-variation">+ Adicionar Porção</button>
+            </div>
+    
             <div class="modal-actions">
                 <button id="cancel-button">Cancelar</button>
                 <button id="save-button">Salvar</button>
