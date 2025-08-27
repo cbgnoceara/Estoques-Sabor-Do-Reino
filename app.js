@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://backend-estoques-sabor-do-reino.onrender.com';
 
 const productList = document.getElementById('product-list');
 const modalContainer = document.getElementById('modal-container');
@@ -158,4 +158,5 @@ saveButton.addEventListener('click', async () => {
 });
 
 // --- INICIALIZAÇÃO ---
+
 carregarProdutos();
