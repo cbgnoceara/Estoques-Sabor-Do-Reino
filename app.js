@@ -1,114 +1,161 @@
-// O endereço do seu backend. Quando for publicar, terá que mudar isso.
 const API_URL = 'http://localhost:3000';
 
-// Elementos da página
 const productList = document.getElementById('product-list');
-
-// Elementos do Modal
 const modalContainer = document.getElementById('modal-container');
+const modalTitle = document.getElementById('modal-title');
 const addProductButton = document.getElementById('add-product-button');
 const cancelButton = document.getElementById('cancel-button');
 const saveButton = document.getElementById('save-button');
 const productNameInput = document.getElementById('product-name');
 const productQuantityInput = document.getElementById('product-quantity');
 
+let produtosCache = []; // Vamos guardar os produtos aqui para facilitar a edição
+let editandoId = null; // Variável para saber se estamos editando ou não
 
-// --- LÓGICA DO ESTOQUE ---
+// --- LÓGICA PRINCIPAL ---
 
-// Função para carregar os produtos do nosso backend
 async function carregarProdutos() {
     try {
         const response = await fetch(`${API_URL}/produtos`);
-        const produtos = await response.json();
+        produtosCache = await response.json(); // Salva os produtos no cache
         
-        productList.innerHTML = ''; // Limpa a lista
-        if (produtos.length === 0) {
+        productList.innerHTML = '';
+        if (produtosCache.length === 0) {
             productList.innerHTML = "<p>Nenhum produto cadastrado. Clique no '+' para começar!</p>";
             return;
         }
 
-        produtos.forEach(produto => {
+        produtosCache.forEach(produto => {
             const item = document.createElement('div');
             item.className = 'product-item';
-            if (produto.quantidade <= 5) {
-                item.classList.add('low-stock');
-            }
+            if (produto.quantidade <= 5) item.classList.add('low-stock');
 
-            // Usamos produto._id que é o ID que vem do MongoDB
             item.innerHTML = `
-                <span class="product-name">${produto.nome}</span>
-                <div class="stock-controls">
-                    <button class="control-button btn-minus" data-id="${produto._id}">-</button>
-                    <span class="stock-quantity">${produto.quantidade}</span>
-                    <button class="control-button btn-plus" data-id="${produto._id}">+</button>
+                <div class="product-info">
+                    <span class="product-name">${produto.nome}</span>
+                </div>
+                <div class="product-actions">
+                    <div class="stock-controls">
+                        <button class="control-button btn-minus" data-id="${produto._id}">-</button>
+                        <span class="stock-quantity">${produto.quantidade}</span>
+                        <button class="control-button btn-plus" data-id="${produto._id}">+</button>
+                    </div>
+                    <button class="action-button btn-edit" data-id="${produto._id}">✏️</button>
+                    <button class="action-button btn-delete" data-id="${produto._id}">🗑️</button>
                 </div>
             `;
             productList.appendChild(item);
         });
-
     } catch (error) {
         console.error("Erro ao carregar produtos:", error);
         productList.innerHTML = "<p style='color: red;'>Não foi possível conectar ao servidor.</p>";
     }
 }
 
-// Event listener para os botões de + e -
+// Listener de cliques na lista de produtos
 productList.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('control-button')) {
-        const id = e.target.dataset.id;
-        const incremento = e.target.classList.contains('btn-plus') ? 1 : -1;
+    const button = e.target.closest('button');
+    if (!button) return;
 
+    const id = button.dataset.id;
+
+    // Lógica para +/-
+    if (button.classList.contains('control-button')) {
+        const incremento = button.classList.contains('btn-plus') ? 1 : -1;
         try {
             await fetch(`${API_URL}/produtos/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ incremento: incremento })
+                body: JSON.stringify({ incremento })
             });
-            // Recarrega a lista para mostrar a atualização
             carregarProdutos();
         } catch (error) {
             console.error("Erro ao atualizar quantidade:", error);
         }
     }
+
+    // Lógica para Editar
+    if (button.classList.contains('btn-edit')) {
+        abrirModalParaEditar(id);
+    }
+
+    // Lógica para Excluir
+    if (button.classList.contains('btn-delete')) {
+        const querExcluir = confirm("Tem certeza que deseja excluir este produto?");
+        if (querExcluir) {
+            try {
+                await fetch(`${API_URL}/produtos/${id}`, { method: 'DELETE' });
+                carregarProdutos();
+            } catch (error) {
+                console.error("Erro ao excluir produto:", error);
+            }
+        }
+    }
 });
 
 
-// --- LÓGICA DO MODAL (ADICIONAR PRODUTO) ---
+// --- LÓGICA DO MODAL ---
 
-addProductButton.addEventListener('click', () => {
+function abrirModalParaAdicionar() {
+    editandoId = null; // Garante que não estamos em modo de edição
+    modalTitle.innerText = "Novo Produto";
+    productNameInput.value = "";
+    productQuantityInput.value = "";
     modalContainer.style.display = 'flex';
-});
+}
 
-cancelButton.addEventListener('click', () => {
+function abrirModalParaEditar(id) {
+    editandoId = id;
+    const produto = produtosCache.find(p => p._id === id); // Busca o produto no nosso cache
+    if (!produto) return;
+
+    modalTitle.innerText = "Editar Produto";
+    productNameInput.value = produto.nome;
+    productQuantityInput.value = produto.quantidade;
+    modalContainer.style.display = 'flex';
+}
+
+function fecharModal() {
     modalContainer.style.display = 'none';
-    productNameInput.value = '';
-    productQuantityInput.value = '';
-});
+}
+
+addProductButton.addEventListener('click', abrirModalParaAdicionar);
+cancelButton.addEventListener('click', fecharModal);
 
 saveButton.addEventListener('click', async () => {
     const nome = productNameInput.value;
     const quantidade = parseInt(productQuantityInput.value);
 
-    if (nome && !isNaN(quantidade)) {
-        try {
+    if (!nome || isNaN(quantidade)) {
+        alert("Por favor, preencha o nome e a quantidade corretamente.");
+        return;
+    }
+
+    const dados = { nome, quantidade };
+    
+    try {
+        if (editandoId) {
+            // Se estamos editando, usamos o método PUT
+            await fetch(`${API_URL}/produtos/${editandoId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+        } else {
+            // Se não, estamos criando, usamos o método POST
             await fetch(`${API_URL}/produtos`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome: nome, quantidade: quantidade })
+                body: JSON.stringify(dados)
             });
-
-            modalContainer.style.display = 'none';
-            productNameInput.value = '';
-            productQuantityInput.value = '';
-            carregarProdutos(); // Recarrega para mostrar o novo produto
-        } catch (error) {
-            console.error("Erro ao salvar produto:", error);
-            alert("Ocorreu um erro ao salvar.");
         }
-    } else {
-        alert("Por favor, preencha o nome e a quantidade.");
+        fecharModal();
+        carregarProdutos();
+    } catch (error) {
+        console.error("Erro ao salvar produto:", error);
+        alert("Ocorreu um erro ao salvar.");
     }
 });
 
-// --- CARREGA OS PRODUTOS QUANDO A PÁGINA ABRE ---
+// --- INICIALIZAÇÃO ---
 carregarProdutos();

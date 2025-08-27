@@ -1,12 +1,16 @@
+/* --- VARIAVEIS DE COR (PALETA DA LANCHONETE) --- */
 :root {
     --primary-color: #ff6347; /* Tomate */
     --secondary-color: #fff8e1; /* Creme */
     --dark-color: #333;
     --light-color: #fff;
-    --danger-color: #e74c3c;
-    --low-stock-color: #fff0f0;
+    --success-color: #2ecc71; /* Verde */
+    --danger-color: #e74c3c; /* Vermelho */
+    --edit-color: #3498db; /* Azul */
+    --low-stock-color: #fff0f0; /* Fundo para estoque baixo */
 }
 
+/* --- ESTILOS GERAIS E RESET --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -21,7 +25,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    padding-top: 20px;
+    padding: 20px;
 }
 
 .container {
@@ -30,22 +34,22 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* Ajustado */
+    align-items: stretch;
 }
 
-/* --- TELA DO APP --- */
+/* --- CABEÇALHO --- */
 header {
     display: flex;
-    flex-direction: column; /* Ajustado */
-    align-items: center; /* Ajustado */
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 20px;
     width: 100%;
-    text-align: center; /* Ajustado */
+    text-align: center;
 }
 
 header h2 {
     color: var(--primary-color);
-    margin-top: 10px; /* Adicionado espaço */
+    margin-top: 10px;
 }
 
 .logo {
@@ -53,6 +57,7 @@ header h2 {
     height: 80px;
 }
 
+/* --- INPUTS E BOTÕES GERAIS --- */
 input[type="text"], input[type="number"] {
     width: 100%;
     padding: 12px;
@@ -61,8 +66,8 @@ input[type="text"], input[type="number"] {
     border-radius: 8px;
     font-size: 16px;
 }
+
 button {
-    width: 100%;
     padding: 12px;
     border: none;
     border-radius: 8px;
@@ -73,9 +78,11 @@ button {
     cursor: pointer;
     transition: background-color 0.2s;
 }
+
 button:hover {
     background-color: #e55337;
 }
+
 
 /* --- LISTA DE PRODUTOS --- */
 #product-list {
@@ -84,6 +91,7 @@ button:hover {
     flex-direction: column;
     gap: 10px;
 }
+
 .product-item {
     background-color: var(--light-color);
     padding: 15px;
@@ -93,24 +101,32 @@ button:hover {
     justify-content: space-between;
     align-items: center;
 }
+
 .product-item.low-stock {
     background-color: var(--low-stock-color);
     border-left: 5px solid var(--danger-color);
 }
+
 .product-name {
     font-weight: 500;
+    word-break: break-word; /* Evita que nomes longos quebrem o layout */
 }
+
+
+/* --- CONTROLES DE ESTOQUE (+/-) --- */
 .stock-controls {
     display: flex;
     align-items: center;
     gap: 15px;
 }
+
 .stock-quantity {
     font-size: 20px;
     font-weight: bold;
     min-width: 30px;
     text-align: center;
 }
+
 .control-button {
     width: 40px;
     height: 40px;
@@ -120,14 +136,48 @@ button:hover {
     justify-content: center;
     align-items: center;
     line-height: 1;
-    padding-bottom: 4px;
+    padding: 0;
+    padding-bottom: 4px; /* ajuste fino para centralizar o texto */
 }
+
 .btn-plus {
-    background-color: #2ecc71;
+    background-color: var(--success-color);
 }
+
 .btn-minus {
     background-color: var(--danger-color);
 }
+
+/* --- BOTÕES DE AÇÃO (EDITAR/EXCLUIR) --- */
+.product-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+    width: auto; /* Para não ocupar 100% da largura como botões normais */
+    border-radius: 50%; /* Deixa o fundo redondo ao clicar */
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #f0f0f0;
+}
+
+.btn-edit {
+    color: var(--edit-color);
+}
+
+.btn-delete {
+    color: var(--danger-color);
+}
+
 
 /* --- BOTÃO FLUTUANTE (FAB) E MODAL --- */
 .fab {
@@ -139,7 +189,9 @@ button:hover {
     border-radius: 50%;
     font-size: 30px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 10;
 }
+
 #modal-container {
     position: fixed;
     top: 0;
@@ -150,7 +202,9 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 20;
 }
+
 #modal {
     background-color: var(--light-color);
     padding: 20px;
@@ -158,12 +212,18 @@ button:hover {
     width: 90%;
     max-width: 350px;
 }
+
 .modal-actions {
     display: flex;
     gap: 10px;
     margin-top: 20px;
 }
+
 #cancel-button {
     background-color: #ccc;
     color: var(--dark-color);
+}
+
+#cancel-button:hover {
+    background-color: #bbb;
 }
