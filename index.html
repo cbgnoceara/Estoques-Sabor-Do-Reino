@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque - Sabor do Reino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/plasticine/100/hamburger.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+
+    <div id="app-container" class="container">
+        <header>
+            <img src="https://img.icons8.com/plasticine/100/hamburger.png" alt="Logo Lanchonete" class="logo">
+            <h2>Estoques</h2>
+            <h2>Sabor do Reino</h2>
+        </header>
+
+        <div id="product-list">
+            </div>
+
+        <footer>
+            <button id="add-product-button" class="fab">+</button>
+        </footer>
+    </div>
+
+    <div id="modal-container" style="display: none;">
+        <div id="modal">
+            <h3>Novo Produto</h3>
+            <input type="text" id="product-name" placeholder="Nome do Produto">
+            <input type="number" id="product-quantity" placeholder="Quantidade Inicial">
+            <div class="modal-actions">
+                <button id="cancel-button">Cancelar</button>
+                <button id="save-button">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
